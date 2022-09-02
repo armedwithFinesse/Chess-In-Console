@@ -7,11 +7,21 @@ notation_number = ['1', '2', '3', '4', '5', '6', '7','8']
 #startpos=True generates starting board for create_board()
 #inputformat will be: letternumberletternumber, with the first set indicating the piece the player wants to move and the last set indicating the place the players wants to move that piece
 
+coordinate_list = [] #full list contianing rows (seperate dicts
+
+#create a rows as dictionaries
+for i in reversed(range(8)):
+    row_dict = {}
+    for letter in notation_letter:
+        row_dict[letter+notation_number[i]] = board[0] + '  '
+    coordinate_list.append(row_dict)
+    continue
 
 
 def coordinate_positions(startpos, usermove,player): #create dictionary of coordinates for plain board
     
-    coordinate_list = [] #full list contianing rows (seperate dicts
+
+    '''coordinate_list = [] #full list contianing rows (seperate dicts
 
     #create a rows as dictionaries
     for i in reversed(range(8)):
@@ -19,7 +29,7 @@ def coordinate_positions(startpos, usermove,player): #create dictionary of coord
         for letter in notation_letter:
             row_dict[letter+notation_number[i]] = board[0] + '  '
         coordinate_list.append(row_dict)
-        continue
+        continue'''
 
     if startpos == True:
         for row in coordinate_list:
@@ -112,6 +122,6 @@ give_board(startpos=True)
 
 while True:
     player_one = str(input('Player 1:  ')).upper()
-    give_board(startpos=True, usermove=True, player = player_one)
+    give_board(usermove=True, player = player_one)
     player_two = str(input('Player 2:  ')).upper()
-    give_board(startpos=True, usermove=True, player = player_two)
+    give_board(usermove=True, player = player_two)
