@@ -189,7 +189,7 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
     #these functions should save the avaliable moves for any given position for every piece. The return value will be compared to the players move-to
     #back in the player_move function and if they match the game will proceed. If not, the input will be marked invalid and player will be given another
     #chance to input a valid move
-    def pawnMovement(movefrom, moveto, coordinate_list):
+    def pawnMovement(movefrom, moveto, coordinate_list): #currently only works for white side #WIP
         '''generate a list of avaliable moves given the circumstances'''
         print('pawn moved')
         #a) max 2 space headstart when leaving home rank
@@ -198,25 +198,30 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
         #d) en pessant
         #e) promotion
         #f) can't move over own side
+
+        def diagcapture(diagdirection, side_key):
+            diagdirection = list(key_list[side_key])
+            for i in diagdirection:
+                if i == diagdirection[1]:
+                    diag_num = int(diagdirection[1]) + 1
+                    diagdirection = diagdirection[0] + str(diag_num)
+                    possible_move_to_list.append(diagdirection)
+
+
         possible_move_to_list = []
 
-        #a
+        #a & b
         for key in coordinate_list[8-int(movefrom[1])]:
             if movefrom == key:
-                potential_move_counter_filter = int(movefrom[1]) + 2
-                newmovefrom = movefrom[0] + str(potential_move_counter_filter)
-                possible_move_to_list.append(newmovefrom) 
-
-        
-        #b
-        for key in coordinate_list[8-int(movefrom[1])]:
-            if movefrom == key:
-                potential_move_counter_filter = int(movefrom[1]) + 1
-                newmovefrom = movefrom[0] + str(potential_move_counter_filter)
-                possible_move_to_list.append(newmovefrom) 
+                adder = 2
+                while adder != 0:
+                    potential_move_counter_filter = int(movefrom[1]) + adder
+                    newmovefrom = movefrom[0] + str(potential_move_counter_filter)
+                    possible_move_to_list.append(newmovefrom)
+                    adder -= 1 
 
 
-        #c #current WIP
+        #c
         key_list = []
         value_list = []
         for row in coordinate_list:
@@ -232,12 +237,23 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
                 left_of_current_key = current_key - 1
                 right_of_current_key = current_key + 1
 
-                leftdiag = list(key_list[left_of_current_key])
-                leftdiag_num = int(leftdiag[1]) + 1
-                leftdiag = leftdiag[0] + str(leftdiag_num)
-                possible_move_to_list.append(leftdiag)
+                
+
+                leftdiag = ''
+                diagcapture(leftdiag ,left_of_current_key)
+
+                '''leftdiag = list(key_list[left_of_current_key])
+                for i in leftdiag:
+                    if i == leftdiag[1]:
+                        leftdiag_num = int(leftdiag[1]) + 1
+                        leftdiag = leftdiag[0] + str(leftdiag_num)
+                        possible_move_to_list.append(leftdiag)'''
+                
 
                 rightdiag = list(key_list[right_of_current_key])
+
+
+
                 rightdiag_num = int(rightdiag[1]) + 1
                 rightdiag = rightdiag[0] + str(rightdiag_num)
                 possible_move_to_list.append(rightdiag)
@@ -254,14 +270,7 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
                 print(key_list[current_key])
                 print(leftdiag)
                 print(rightdiag)'''
-               
-                #and(some code to calculate all foreward diagonals from current position) is equal to piece from opposite color dictionary:
-                '''find the files directly next to the one where the current position sits
-                 and find the rank that is equal to the current position on aforementioned files 
-                 and then increase (or decrease in the case of black) the aforementioned file-rank 
-                 coordinates by 1 such that the returned coordinates are in line with themselves 
-                 and diagonal to the current position''' 
-                
+                               
         #d
         #e
 
