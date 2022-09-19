@@ -11,11 +11,6 @@
     
 #only 3 pieces of starting information to create the whole game
 
-
-
-
-
-
 board = ['.', 'P', 'R', 'N', 'B','Q','K']
 notation_letter= ['A','B','C','D','E','F','G','H']
 notation_number = ['1', '2', '3', '4', '5', '6', '7','8']  
@@ -209,35 +204,69 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
         for key in coordinate_list[8-int(movefrom[1])]:
             if movefrom == key:
                 potential_move_counter_filter = int(movefrom[1]) + 2
-                movefrom = movefrom[0] + str(potential_move_counter_filter)
-                possible_move_to_list.append(movefrom) 
+                newmovefrom = movefrom[0] + str(potential_move_counter_filter)
+                possible_move_to_list.append(newmovefrom) 
 
         
         #b
         for key in coordinate_list[8-int(movefrom[1])]:
             if movefrom == key:
                 potential_move_counter_filter = int(movefrom[1]) + 1
-                movefrom = movefrom[0] + str(potential_move_counter_filter)
-                possible_move_to_list.append(movefrom) 
+                newmovefrom = movefrom[0] + str(potential_move_counter_filter)
+                possible_move_to_list.append(newmovefrom) 
 
 
         #c #current WIP
+        key_list = []
+        value_list = []
+        for row in coordinate_list:
+            for key, value in row.items():
+                key_list.append(key)
+                value_list.append(value)
+        
+
+    
         for key in coordinate_list[8-int(movefrom[1])]:
             if movefrom == key:
+                current_key = key_list.index(key)
+                left_of_current_key = current_key - 1
+                right_of_current_key = current_key + 1
+
+                leftdiag = list(key_list[left_of_current_key])
+                leftdiag_num = int(leftdiag[1]) + 1
+                leftdiag = leftdiag[0] + str(leftdiag_num)
+                possible_move_to_list.append(leftdiag)
+
+                rightdiag = list(key_list[right_of_current_key])
+                rightdiag_num = int(rightdiag[1]) + 1
+                rightdiag = rightdiag[0] + str(rightdiag_num)
+                possible_move_to_list.append(rightdiag)
+
+
+
+                '''print('test one passed')
+                print(key_list)
+                #print(current_key)
+                #print(left_of_current_key)
+                print(key_list[left_of_current_key])
+                #print(right_of_current_key)
+                print(key_list[right_of_current_key])
+                print(key_list[current_key])
+                print(leftdiag)
+                print(rightdiag)'''
+               
                 #and(some code to calculate all foreward diagonals from current position) is equal to piece from opposite color dictionary:
-                '''find the files directly next to the one where the current position sits and find the rank that is equal 
-                to the current position on aforementioned files and then increase (or decrease in the cae of black) the 
-                aforementioned file-rank coordinates by 1 such that the returned coordinates are in line with themselves 
-                and diagonal to the current position'''
-
-                potential_move_counter_filter = int(movefrom[1]) + 1
-                movefrom = movefrom[0] + str(potential_move_counter_filter)
-                possible_move_to_list.append(movefrom) 
-
+                '''find the files directly next to the one where the current position sits
+                 and find the rank that is equal to the current position on aforementioned files 
+                 and then increase (or decrease in the case of black) the aforementioned file-rank 
+                 coordinates by 1 such that the returned coordinates are in line with themselves 
+                 and diagonal to the current position''' 
+                
         #d
         #e
 
-        print(possible_move_to_list)
+        print(possible_move_to_list) #this will get returned eventually back up to where piece_movement was first called
+
        
     def RookMovement():
         print('rook moved')
@@ -284,9 +313,9 @@ def errorHandling():
 
 give_board(startpos=True)
 
-#print(coordinate_list)
-print(white_dictionary)
-print(black_dictionary)
+print(coordinate_list)
+#print(white_dictionary)
+#print(black_dictionary)
 
 
 '''while True:
