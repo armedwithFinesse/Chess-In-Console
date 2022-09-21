@@ -13,6 +13,9 @@
 
 
 
+from shutil import move
+
+
 board = ['.', 'P', 'R', 'N', 'B','Q','K']
 notation_letter= ['A','B','C','D','E','F','G','H']
 notation_number = ['1', '2', '3', '4', '5', '6', '7','8']  
@@ -54,7 +57,7 @@ def gameplay():
                 continue
             elif didpass == True:
                 break
-            
+
         while True:
             player_two = str(input('\n'+'Player 2:  ')).upper()
             print('\n')
@@ -76,7 +79,7 @@ def playermove(player, colordict):
     move_from = ''.join(player[0]+player[1])
     #player.split()             
     move_to = ''.join(player[2]+player[3])
-    #possible_move_to_list = []
+    possible_move_to_list = []
 
 
 
@@ -90,7 +93,6 @@ def playermove(player, colordict):
             didpass = True
             break #piece_movement_list should be returned at this point 
         else:
-            possible_move_to_list = []
             didpass = False #needs to return to player input to give another attempt
 
     '''for key, value in coordinate_list[0]: #8th rank #do not delete, en pessant checker (is it neccessary?)
@@ -106,7 +108,7 @@ def playermove(player, colordict):
         else:
             print('invalid')'''
         
-
+   
 
 
     #change dictionary values of move from to empty spaces
@@ -126,17 +128,27 @@ def playermove(player, colordict):
             coordinate_list[8-int(move_to[1])][key] = tempcopy #coordinate_list[8-int(move_from[1])][move_from]'''
 
 
-
     if move_to in possible_move_to_list:
         coordinate_list[8-int(move_to[1])][move_to] = tempcopy
+
+        #updates colordict with positions of pieces
+        colordict[move_to] = colordict[move_from]
+        del colordict[move_from]
         didpass = True
-    elif move_to not in possible_move_to_list:
+    else:
         coordinate_list[8-int(move_from[1])][move_from]  = tempcopy
         didpass = False
 
-            
+    
 
-    print(didpass)
+
+
+    #print(colordict)
+
+
+
+
+    #print(didpass)
     
     return didpass
 
@@ -186,7 +198,7 @@ def coordinate_positions(startpos, usermove,player, colordict):  #create diction
                     black_dictionary[key] = (row[key])
 
 
-
+              
                 
 
     #indicates that a player will be making a move
@@ -272,20 +284,26 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
                     diag_num = int(diagdirection[1]) + adder
                     diagdirection = diagdirection[0] + str(diag_num)
                     possible_move_to_list.append(diagdirection)
-            return None
+            return diagdirection
 
                                     
 
         possible_move_to_list = []
 
+        
+
         #a & b
         for key in coordinate_list[8-int(movefrom[1])]:
             if movefrom == key:
-                adder = blackorwhite(2)
+                if movefrom[1] == '2' or movefrom[1] == '7':
+                    adder = blackorwhite(2)
+                else:
+                    adder = blackorwhite(1)
                 while adder != 0:
                     potential_move_counter_filter = int(movefrom[1]) + adder
                     newmovefrom = movefrom[0] + str(potential_move_counter_filter)
                     possible_move_to_list.append(newmovefrom)
+                    
                     if colordict == white_dictionary:
                         adder -= 1
                     elif colordict == black_dictionary:
@@ -308,9 +326,11 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
                 right_of_current_key = current_key + adder
 
                 leftdiag = ''
-                diagcapture(leftdiag ,left_of_current_key)
+                leftdiag = diagcapture(leftdiag ,left_of_current_key)
                 rightdiag = ''
-                diagcapture(rightdiag, right_of_current_key)
+                rightdiag = diagcapture(rightdiag, right_of_current_key)
+
+
             
                 
                                
@@ -320,7 +340,7 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
         '''when pawn reaches opposeite back rank, it promotes to a piece of the players choosing'''
 
 
-        def enpessant(ranknum, pawntype, promotedpiece):
+        def promotion(ranknum, pawntype, promotedpiece):
             for key, value in coordinate_list[ranknum].items():
                 if moveto == key and colordict[movefrom] == pawntype:
                     coordinate_list[0][key] = promotedpiece
@@ -342,8 +362,8 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
                 coordinate_list[7][key] = 'q' + '  '
                 print('black pawn promoted')'''
 
-        enpessant(0," 'P' + '  ' ", "'Q' + '  '")
-        enpessant(7, "'p' + '  '", "'q' + '  '")
+        promotion(0," 'P' + '  ' ", "'Q' + '  '")
+        promotion(7, "'p' + '  '", "'q' + '  '")
 
 
                 
@@ -366,7 +386,7 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
     
 
         #f
-
+        print(possible_move_to_list)
         return possible_move_to_list #this will get returned eventually back up to where piece_movement was first called
 
        
@@ -382,6 +402,7 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
         print('queen moved')
 
    #validates the piece that the player wants to move
+    print(colordict[movefrom])
     if colordict[movefrom] =='P' + '  ' or colordict[movefrom] == 'p' + '  ':
         possible_move_to_list = pawnMovement(movefrom, moveto, coordinate_list)
     elif colordict[movefrom] == 'R'+ '  'or colordict[movefrom] == 'r' + '  ':
