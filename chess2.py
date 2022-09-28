@@ -13,7 +13,6 @@
 
 
 
-from shutil import move
 
 
 board = ['.', 'P', 'R', 'N', 'B','Q','K']
@@ -25,8 +24,6 @@ notation_number = ['1', '2', '3', '4', '5', '6', '7','8']
 
 '''This creates an empty board by default'''
 coordinate_list = [] #full list contianing rows (seperate dicts)
-#global didpass
-#didpass = True
 
 #create a rows as dictionaries
 for i in reversed(range(8)):
@@ -44,7 +41,6 @@ black_dictionary = {}
 
 def gameplay():
     game = True
-    #global didpass
     while game == True:
         while True:
             player_one = str(input('\n'+'Player 1:  ')).upper()
@@ -113,8 +109,20 @@ def playermove(player, colordict):
 
     #change dictionary values of move from to empty spaces
     for key, val in coordinate_list[8-int(move_from[1])].items():
-        if move_from == key:
+        if move_from == key and (board[5] + '  ') in possible_move_to_list:
+            tempcopy = board[5] + '  '
+            coordinate_list[8-int(move_from[1])][key] = board[0]+'  ' #checks for pawn promotion
+            didpass = True
+            break
+        elif move_from == key and (board[5].lower() + '  ') in possible_move_to_list:
+            tempcopy = board[5].lower() + '  '
+            coordinate_list[8-int(move_from[1])][key] = board[0]+'  ' #checks for pawn promotion
+            didpass = True
+            break
+
+        elif move_from == key and ((board[5] + '  ') not in possible_move_to_list or ((board[5].lower() + '  ') in possible_move_to_list)) : #checks for not-pawn promotion
             tempcopy = coordinate_list[8-int(move_from[1])][key] 
+
             coordinate_list[8-int(move_from[1])][key] = board[0]+'  ' #replaces every moved from space with a dot, indicating empty square
             didpass = True
             break
@@ -138,6 +146,16 @@ def playermove(player, colordict):
     else:
         coordinate_list[8-int(move_from[1])][move_from]  = tempcopy
         didpass = False
+
+   
+        
+
+
+    
+
+
+
+
 
     
 
@@ -196,6 +214,34 @@ def coordinate_positions(startpos, usermove,player, colordict):  #create diction
                 elif '7' in key:
                     row[key] = board[1].lower() + '  '
                     black_dictionary[key] = (row[key])
+
+
+    elif startpos == 'promotion_test':
+        for row in coordinate_list:
+            for key, value in row.items():
+                if "A7" == key:
+                    row[key] = board[1] + '  '
+                    white_dictionary[key] = board[1] + '  '
+                elif 'A2' == key:
+                    row [key] = board[1].lower() + '  '
+                    black_dictionary[key] = board[1].lower() + '  '
+
+
+    elif startpos == 'rooktest':
+        for row in coordinate_list:
+            for key, value in row.items():
+                if "A1" == key:
+                    row[key] = board[2] + '  '
+                    white_dictionary[key] = board[2] + '  '
+                elif 'A8' == key:
+                    row [key] = board[2].lower() + '  '
+                    black_dictionary[key] = board[2].lower() + '  '
+
+        
+
+
+
+
 
 
               
@@ -337,17 +383,24 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
         #d
 
         #e
-        '''when pawn reaches opposeite back rank, it promotes to a piece of the players choosing'''
+        '''when pawn reaches opposite back rank, it promotes to a piece of the players choosing'''
 
-
+        '''@@@@@@@@@@@@@@@@@@@@~W.I.P.~@@@@@@@@@@@@@@@@@@@@@@@need to write  test that checks if pawns can be promoted. Also need to finish pawn promotion and en pessant@@@@@@@@@@@@@@@@@@@@~W.I.P~@@@@@@@@@@@@@@@@@@2'''
         def promotion(ranknum, pawntype, promotedpiece):
             for key, value in coordinate_list[ranknum].items():
                 if moveto == key and colordict[movefrom] == pawntype:
-                    coordinate_list[0][key] = promotedpiece
-                    if pawntype == 'P' + '  ':
+                    #coordinate_list[0][key] = promotedpiece
+                    coordinate_list[ranknum].update({key : promotedpiece})
+                    possible_move_to_list.append(coordinate_list[ranknum][key])
+
+                    if pawntype == board[1] + '  ':
                         print('white pawn promoted')
-                    elif pawntype == 'p' + '  ':
+                    elif pawntype == board[1].lower() + '  ':
                         print('black pawn promoted')
+                
+             
+            
+            
             return None
 
 
@@ -356,42 +409,91 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
         '''for key, value in coordinate_list[0].items():
             if moveto == key and colordict[movefrom] =='P' + '  ':
                 coordinate_list[0][key] = 'Q' + '  '
+                possible_move_to_list.append(coordinate_list[0][key])
                 print('white pawn promoted')
         for key, value in coordinate_list[7].items():
             if moveto == key and colordict[movefrom] =='p' + '  ':
                 coordinate_list[7][key] = 'q' + '  '
                 print('black pawn promoted')'''
 
-        promotion(0," 'P' + '  ' ", "'Q' + '  '")
-        promotion(7, "'p' + '  '", "'q' + '  '")
+        promoted = promotion(0, (board[1] + '  '), (board[5] + '  '))
+        promoted = promotion(7, (board[1].lower() + '  '), (board[5].lower() + '  '))
 
 
                 
 
-
-
-            
-        '''for key, value in coordinate_list[0].items(): #8th rank of board
-            if colordict == white_dictionary  and coordinate_list[0][key] == 'P' + '  ':
-                print('white pawn ready for promotion')
-                #coordinate_list[key] = 'Q' + '  '''
-
-
-        '''for i in coordinate_list[0]: #tests
-            print(coordinate_list[0][i])'''
-
-
-
-
-    
-
         #f
+
+
         print(possible_move_to_list)
+    
         return possible_move_to_list #this will get returned eventually back up to where piece_movement was first called
 
        
-    def RookMovement():
+    def RookMovement(movefrom, moveto, coordinate_list):
+        '''generate a list of avaliable moves given the circumstances
+        find all spaces in front of, in back of, to the lft of , to the right of current position that are either empty or contain enemy pieces. 
+        These positions are considered valid and put into possible_move_to_list'''
+
+        #a) rook moved infintely vertically and horizantally
+        #b) rook cannot jump over pieces
         print('rook moved')
+
+        def blackorwhite(num):
+            if colordict == white_dictionary:
+                adder = num
+            elif colordict == black_dictionary:
+                adder = -num
+            return adder
+
+        possible_move_to_list = []
+
+        #a
+        #print(coordinate_list[8-int(movefrom[1])])
+        for key in coordinate_list[8-int(movefrom[1])]:
+            if movefrom == key:
+            
+                adder = blackorwhite(7)
+                while adder != 0:
+                    potential_move_counter_filter = int(movefrom[1]) + adder
+                    newmovefromvert = movefrom[0] + str(potential_move_counter_filter)
+                    possible_move_to_list.append(newmovefromvert)
+
+
+                    #must define rook quadrants and color to determine if i am  + or - adder value
+
+                    potential_move_letter_filter_side_one = ord(newmovefromvert[0]) - adder
+                    potential_move_letter_filter_side_two = ord(newmovefromvert[0]) + adder
+                    newmovefromhoriz = chr(potential_move_letter_filter_side_one) + str(movefrom[1])
+                    possible_move_to_list.append(newmovefromhoriz)
+                    newmovefromhoriz_two = chr(potential_move_letter_filter_side_two) + str(movefrom[1])
+                    possible_move_to_list.append(newmovefromhoriz_two)
+
+
+
+
+                    #print(newmovefrom[0])
+
+                    if colordict == white_dictionary:
+                        adder -= 1
+                    elif colordict == black_dictionary:
+                        adder += 1
+
+                
+
+                
+
+
+        print(possible_move_to_list)
+
+        return possible_move_to_list
+                
+
+
+
+        
+
+
     def KnightMovement():
         print('knight moved')
     def BishopMovement():
@@ -406,7 +508,7 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
     if colordict[movefrom] =='P' + '  ' or colordict[movefrom] == 'p' + '  ':
         possible_move_to_list = pawnMovement(movefrom, moveto, coordinate_list)
     elif colordict[movefrom] == 'R'+ '  'or colordict[movefrom] == 'r' + '  ':
-        RookMovement()
+        possible_move_to_list = RookMovement(movefrom, moveto, coordinate_list)
     elif colordict[movefrom] == 'N'+ '  'or colordict[movefrom] == 'n' + '  ':
         KnightMovement()
     elif colordict[movefrom] == 'B'+ '  'or colordict[movefrom] == 'b' + '  ':
@@ -434,7 +536,8 @@ def errorHandling():
     pass
 
 
-give_board(startpos=True)
+
+give_board(startpos=True) #'promotion_test', True, False, 'rooktest'
 
 
 
