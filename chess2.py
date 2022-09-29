@@ -15,6 +15,9 @@
 
 
 
+from operator import pos
+
+
 board = ['.', 'P', 'R', 'N', 'B','Q','K']
 notation_letter= ['A','B','C','D','E','F','G','H']
 notation_number = ['1', '2', '3', '4', '5', '6', '7','8']  
@@ -446,6 +449,8 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
                 adder = -num
             return adder
 
+        
+
         possible_move_to_list = []
 
         #a
@@ -453,33 +458,68 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
         for key in coordinate_list[8-int(movefrom[1])]:
             if movefrom == key:
             
+
+                #get all possible (read: on board only) vertical moves from current position
                 adder = blackorwhite(7)
                 while adder != 0:
+                    
                     potential_move_counter_filter = int(movefrom[1]) + adder
+                    print(potential_move_counter_filter)
+
+                    if potential_move_counter_filter > 8 or potential_move_counter_filter < 1:
+                        if colordict == white_dictionary:
+                            adder -= 1
+                        elif colordict == black_dictionary:
+                            adder += 1
+                        continue
+
+                    
                     newmovefromvert = movefrom[0] + str(potential_move_counter_filter)
                     possible_move_to_list.append(newmovefromvert)
-
-
-                    #must define rook quadrants and color to determine if i am  + or - adder value
-
-                    potential_move_letter_filter_side_one = ord(newmovefromvert[0]) - adder
-                    potential_move_letter_filter_side_two = ord(newmovefromvert[0]) + adder
-                    newmovefromhoriz = chr(potential_move_letter_filter_side_one) + str(movefrom[1])
-                    possible_move_to_list.append(newmovefromhoriz)
-                    newmovefromhoriz_two = chr(potential_move_letter_filter_side_two) + str(movefrom[1])
-                    possible_move_to_list.append(newmovefromhoriz_two)
-
-
-
-
-                    #print(newmovefrom[0])
-
                     if colordict == white_dictionary:
                         adder -= 1
                     elif colordict == black_dictionary:
                         adder += 1
+    
+                #get all possible (read: on board only) horizantal moves from current position
+                for i in notation_letter:
+                    asciival = ord(i)
+                    newmovefromhoriz = chr(asciival) + movefrom[1]
+                    possible_move_to_list.append(newmovefromhoriz)
 
+
+        #b
+        #prune list for moves that can't exist due to piece obstruction 
+
+
+        
+           #if space is has a value that is in the current sides dictionary, remove the move from possible move list 
+        for key, value in colordict.items():
+            if key in possible_move_to_list:
+                possible_move_to_list.remove(key)
+
+        
+
+            
+
+        
+
+
+    
+        
+        
+
+
+
+
+
+
+    
+            
                 
+                
+
+
 
                 
 
