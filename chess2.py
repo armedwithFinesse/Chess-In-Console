@@ -12,8 +12,7 @@
 #only 3 pieces of starting information to create the whole game
 
 
-
-from queue import Empty
+from re import I
 
 
 board = ['.', 'P', 'R', 'N', 'B','Q','K']
@@ -549,6 +548,7 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
     def BishopMovement(movefrom, moveto, coordinate_list):
         print('bishop moved')
 
+
         def blackorwhite(num):
             if colordict == white_dictionary:
                 adder = num
@@ -556,11 +556,13 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
                 adder = -num
             return adder
 
+        
 
 
 
 
-        def phase_one_func(movesource):
+
+        '''def phase_one_func(movesource):
             adder = blackorwhite(1)
             
             try:
@@ -581,7 +583,7 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
             below = movesource[0] + str(potential_move_counter_filter)
             phase_one_list.append(below)
 
-            return phase_one_list
+            return phase_one_list'''
 
         
         
@@ -596,9 +598,7 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
         #b) bishop cannot jump over pieces
 
         possible_move_to_list = []
-        phase_one_list = []
-        phase_two_list = []
-        phase_three_list =[]
+      
 
         #a
         #print(coordinate_list[8-int(movefrom[1])])
@@ -618,94 +618,55 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
                 below = movefrom[0] + str(potential_move_counter_filter)
                 phase_one_list.append(below)'''
 
-                #x = 0
-                #while x != 8:
-                for i in range(2):
-                    if not phase_one_list:
-                        phase_one_list = phase_one_func(movefrom)
-                    else:
-                        for item in phase_two_list:
-                            phase_one_list = phase_one_func(item)
+            letter = ord(movefrom[0])
+            number = int(movefrom[1])
 
-            
-                
-                            
+            direction_list = [1, -1]
 
+            while direction_list[0] < 9:
+                for i in direction_list:
 
-                #print(phase_one_list)
-
-                    #calculate 1 square to the left and right (total 4) of the above and below squares (total 2)
-                    #add the 4 spaces to the valid move list 
-
-                for item in phase_one_list: 
-                    asciival = ord(item[0])
-
-                    right = chr(asciival + 1) + item[1]
-                    left = chr(asciival - 1) + item[1]
-
-                    phase_two_list.append(right)
-                    phase_two_list.append(left)
-
-                    possible_move_to_list.append(right)
-                    possible_move_to_list.append(left)
-
-                    #x += 1
-
-                for item in phase_two_list:
-                    phase_one_list = phase_one_func(item)
-
-            
-                for item in phase_one_list: 
-                    asciival = ord(item[0])
-
-                    right = chr(asciival + 2) + item[1]
-                    left = chr(asciival - 2) + item[1]
-
-                    phase_two_list.append(right)
-                    phase_two_list.append(left)
-
-                    possible_move_to_list.append(right)
-                    possible_move_to_list.append(left)
-
-        
+                    newletter = letter + i
+                    newnumber = number + i
+                    newmove = chr(newletter) + str(newnumber)
 
 
+                    for row in coordinate_list:
+                        for key in row.keys():
+                            if newmove == key and newmove not in possible_move_to_list:
 
-
-                        #possible_move_to_list.append(right, left)
-
-                    #phase_one_list.clear()
-
-                    #print(phase_two_list)
-                
-                        
+                                possible_move_to_list.append(newmove)
+                    
+                    newletter = letter - i
+                    newnumber = number + i
+                    newmove = chr(newletter) + str(newnumber)
 
                     
-                    #print(phase_two_list)
-                    #print(phase_one_list)
+                    for row in coordinate_list:
+                        for key in row.keys():
+                            if newmove == key and newmove not in possible_move_to_list:
 
+                                possible_move_to_list.append(newmove)
 
-          
+                    
 
+                    direction_list[0] += 1
+                    direction_list[1] += 1
+
+                
 
 
     #prune invalid spaces that i) are occupied by sides own pieces
-    
-
-        '''for key, value in colordict.items():
-        if key in possible_move_to_list:
-            possible_move_to_list.remove(key)'''
+       
+        for key, value in colordict.items():
+            if key in possible_move_to_list:
+                possible_move_to_list.remove(key)
             
 
 
         #and ii) would require jumping to get to, as bishops don't jump over pieces.\ WIP################
 
-        #print(phase_two_list)
-        #print(phase_one_list)
-
-        '''for i in phase_two_list:
-            possible_move_to_list.append(i)'''
-
+    
         print(possible_move_to_list)  
 
         return possible_move_to_list                      
