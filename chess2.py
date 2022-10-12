@@ -13,9 +13,7 @@
 
 
 
-
-
-from operator import pos
+from queue import Empty
 
 
 board = ['.', 'P', 'R', 'N', 'B','Q','K']
@@ -408,7 +406,6 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
 
 
 
-
         '''for key, value in coordinate_list[0].items():
             if moveto == key and colordict[movefrom] =='P' + '  ':
                 coordinate_list[0][key] = 'Q' + '  '
@@ -466,6 +463,7 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
                     potential_move_counter_filter = int(movefrom[1]) + adder
                     print(potential_move_counter_filter)
 
+                    #maintains board boundaries during calculation
                     if potential_move_counter_filter > 8 or potential_move_counter_filter < 1:
                         if colordict == white_dictionary:
                             adder -= 1
@@ -490,13 +488,25 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
 
         #b
         #prune list for moves that can't exist due to piece obstruction 
-
-
         
-           #if space is has a value that is in the current sides dictionary, remove the move from possible move list 
+           #if a space is both a canadate move and resides in the players current (colordict) dictionary (meaning said canadate move is occupied by the players own piece),
+           #remove the move from possible move list 
         for key, value in colordict.items():
             if key in possible_move_to_list:
                 possible_move_to_list.remove(key)
+            
+
+
+            #must now remove spaces that would require jumping, as rooks cannot jump pieces
+
+        '''current_key_index = possible_move_to_list.index(key)'''
+
+
+        
+               
+
+
+
 
         
 
@@ -536,8 +546,185 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
 
     def KnightMovement():
         print('knight moved')
-    def BishopMovement():
+    def BishopMovement(movefrom, moveto, coordinate_list):
         print('bishop moved')
+
+        def blackorwhite(num):
+            if colordict == white_dictionary:
+                adder = num
+            elif colordict == black_dictionary:
+                adder = -num
+            return adder
+
+
+
+
+
+        def phase_one_func(movesource):
+            adder = blackorwhite(1)
+            
+            try:
+                potential_move_counter_filter = int(movesource[1]) + adder
+            except:
+                potential_move_counter_filter = 'invalid'
+
+                
+            above = movefrom[0] + str(potential_move_counter_filter)
+            phase_one_list.append(above)
+
+
+            try:
+                potential_move_counter_filter = int(movesource[1]) - adder
+            except:
+                potential_move_counter_filter = 'invalid'
+
+            below = movesource[0] + str(potential_move_counter_filter)
+            phase_one_list.append(below)
+
+            return phase_one_list
+
+        
+        
+    
+            
+            
+
+
+
+
+        #a) bishop moved infintely vertically and horizantally
+        #b) bishop cannot jump over pieces
+
+        possible_move_to_list = []
+        phase_one_list = []
+        phase_two_list = []
+        phase_three_list =[]
+
+        #a
+        #print(coordinate_list[8-int(movefrom[1])])
+        for key in coordinate_list[8-int(movefrom[1])]:
+            if movefrom == key:
+            
+                '''get current position and then stairstep spaces from each corner. then prune what is invalid'''
+
+                #calculate 1 space above and below the current square
+                '''adder = blackorwhite(1)
+                
+                potential_move_counter_filter = int(movefrom[1]) + adder
+                above = movefrom[0] + str(potential_move_counter_filter)
+                phase_one_list.append(above)
+
+                potential_move_counter_filter = int(movefrom[1]) - adder
+                below = movefrom[0] + str(potential_move_counter_filter)
+                phase_one_list.append(below)'''
+
+                #x = 0
+                #while x != 8:
+                for i in range(2):
+                    if not phase_one_list:
+                        phase_one_list = phase_one_func(movefrom)
+                    else:
+                        for item in phase_two_list:
+                            phase_one_list = phase_one_func(item)
+
+            
+                
+                            
+
+
+                #print(phase_one_list)
+
+                    #calculate 1 square to the left and right (total 4) of the above and below squares (total 2)
+                    #add the 4 spaces to the valid move list 
+
+                for item in phase_one_list: 
+                    asciival = ord(item[0])
+
+                    right = chr(asciival + 1) + item[1]
+                    left = chr(asciival - 1) + item[1]
+
+                    phase_two_list.append(right)
+                    phase_two_list.append(left)
+
+                    possible_move_to_list.append(right)
+                    possible_move_to_list.append(left)
+
+                    #x += 1
+
+                for item in phase_two_list:
+                    phase_one_list = phase_one_func(item)
+
+            
+                for item in phase_one_list: 
+                    asciival = ord(item[0])
+
+                    right = chr(asciival + 2) + item[1]
+                    left = chr(asciival - 2) + item[1]
+
+                    phase_two_list.append(right)
+                    phase_two_list.append(left)
+
+                    possible_move_to_list.append(right)
+                    possible_move_to_list.append(left)
+
+        
+
+
+
+
+                        #possible_move_to_list.append(right, left)
+
+                    #phase_one_list.clear()
+
+                    #print(phase_two_list)
+                
+                        
+
+                    
+                    #print(phase_two_list)
+                    #print(phase_one_list)
+
+
+          
+
+
+
+    #prune invalid spaces that i) are occupied by sides own pieces
+    
+
+        '''for key, value in colordict.items():
+        if key in possible_move_to_list:
+            possible_move_to_list.remove(key)'''
+            
+
+
+        #and ii) would require jumping to get to, as bishops don't jump over pieces.\ WIP################
+
+        #print(phase_two_list)
+        #print(phase_one_list)
+
+        '''for i in phase_two_list:
+            possible_move_to_list.append(i)'''
+
+        print(possible_move_to_list)  
+
+        return possible_move_to_list                      
+
+
+
+
+
+                     
+
+                    
+
+                        
+
+
+
+
+
+
     def KingMovement():
         print('king moved')
     def QueenMovement():
@@ -552,7 +739,7 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
     elif colordict[movefrom] == 'N'+ '  'or colordict[movefrom] == 'n' + '  ':
         KnightMovement()
     elif colordict[movefrom] == 'B'+ '  'or colordict[movefrom] == 'b' + '  ':
-        BishopMovement()
+        possible_move_to_list = BishopMovement(movefrom, moveto, coordinate_list)
     elif colordict[movefrom] == 'K'+ '  'or colordict[movefrom] == 'k' + '  ':
         KingMovement()
     elif colordict[movefrom] == 'Q'+ '  'or colordict[movefrom] == 'q' + '  ':
