@@ -460,7 +460,7 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
                 while adder != 0:
                     
                     potential_move_counter_filter = int(movefrom[1]) + adder
-                    print(potential_move_counter_filter)
+                    #print(potential_move_counter_filter)
 
                     #maintains board boundaries during calculation
                     if potential_move_counter_filter > 8 or potential_move_counter_filter < 1:
@@ -493,7 +493,114 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
         for key, value in colordict.items():
             if key in possible_move_to_list:
                 possible_move_to_list.remove(key)
+        
             
+          
+
+            
+
+
+
+
+
+
+            
+
+
+
+        
+                #vertical increment by 1 (keep key_zero the same and only change key_one) everything chronologically after key should be taken out
+           
+
+
+                
+
+
+                '''adder = blackorwhite(1)
+
+                for i in range(9):
+                    key_one = int(key_one)
+                    key_one += adder
+                    new_move = key[0] + str(key_one)
+                    if new_move in possible_move_to_list:
+                        possible_move_to_list.remove(new_move)'''
+
+                #horiantal increment by 1 (keep key_one the same and only change kay-zero) this part doesn't
+
+                '''adder = blackorwhite(1)
+
+                for i in range(9):
+                    key_zero = ord(key[0])
+                    key_zero += adder
+                    new_move = chr(key_zero) + key[1]
+                    if new_move in possible_move_to_list:
+                        possible_move_to_list.remove(new_move)'''
+                    
+
+
+
+
+
+
+
+
+
+
+
+            
+
+
+                '''adder = blackorwhite(1)
+                for i in range(9):
+                    
+                    vertical_block = key[0] + str(int(key[1]) + adder)
+
+                    print(vertical_block)
+                
+                
+                    horizantal_block = chr(ord(key[0]) + adder) + key[1]
+
+                    print(horizantal_block)
+
+                    if vertical_block in colordict.keys():
+                        if vertical_block in possible_move_to_list:
+                            possible_move_to_list.remove(vertical_block)
+
+                    if horizantal_block in colordict.keys():
+                        if horizantal_block in possible_move_to_list:
+                            possible_move_to_list.remove(horizantal_block)
+                
+
+                    adder += 1'''
+
+            
+                '''turn key into key[0] and key[1] and then increment by 1 and remove from list.'''
+
+                '''key_zero = key[0]
+                key_one = key[1]
+
+                #vertical increment by 1 (keep key_zero the same and only change key_one) this part works
+                adder = blackorwhite(1)
+
+                for i in range(9):
+                    key_one = int(key_one)
+                    key_one += adder
+                    new_move = key[0] + str(key_one)
+                    if new_move in possible_move_to_list:
+                        possible_move_to_list.remove(new_move)
+
+                #horiantal increment by 1 (keep key_one the same and only change kay-zero) this part doesn't
+
+                adder = blackorwhite(1)
+
+                for i in range(9):
+                    key_zero = ord(key[0])
+                    key_zero += adder
+                    new_move = chr(key_zero) + key[1]
+                    print(new_move)
+                    if new_move in possible_move_to_list:
+                        possible_move_to_list.remove(new_move)'''
+                    
 
 
             #must now remove spaces that would require jumping, as rooks cannot jump pieces
@@ -549,52 +656,7 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
         print('bishop moved')
 
 
-        def blackorwhite(num):
-            if colordict == white_dictionary:
-                adder = num
-            elif colordict == black_dictionary:
-                adder = -num
-            return adder
-
-        
-
-
-
-
-
-        '''def phase_one_func(movesource):
-            adder = blackorwhite(1)
-            
-            try:
-                potential_move_counter_filter = int(movesource[1]) + adder
-            except:
-                potential_move_counter_filter = 'invalid'
-
-                
-            above = movefrom[0] + str(potential_move_counter_filter)
-            phase_one_list.append(above)
-
-
-            try:
-                potential_move_counter_filter = int(movesource[1]) - adder
-            except:
-                potential_move_counter_filter = 'invalid'
-
-            below = movesource[0] + str(potential_move_counter_filter)
-            phase_one_list.append(below)
-
-            return phase_one_list'''
-
-        
-        
-    
-            
-            
-
-
-
-
-        #a) bishop moved infintely vertically and horizantally
+        #a) bishop moved infintely diagonally
         #b) bishop cannot jump over pieces
 
         possible_move_to_list = []
@@ -606,17 +668,6 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
             if movefrom == key:
             
                 '''get current position and then stairstep spaces from each corner. then prune what is invalid'''
-
-                #calculate 1 space above and below the current square
-                '''adder = blackorwhite(1)
-                
-                potential_move_counter_filter = int(movefrom[1]) + adder
-                above = movefrom[0] + str(potential_move_counter_filter)
-                phase_one_list.append(above)
-
-                potential_move_counter_filter = int(movefrom[1]) - adder
-                below = movefrom[0] + str(potential_move_counter_filter)
-                phase_one_list.append(below)'''
 
             letter = ord(movefrom[0])
             number = int(movefrom[1])
@@ -664,6 +715,8 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
             
 
 
+
+        #b
         #and ii) would require jumping to get to, as bishops don't jump over pieces.\ WIP################
 
     
@@ -686,10 +739,189 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
 
 
 
-    def KingMovement():
+    def KingMovement(movefrom, moveto, coordinate_list):
         print('king moved')
-    def QueenMovement():
+
+        def blackorwhite(num):
+            if colordict == white_dictionary:
+                adder = num
+            elif colordict == black_dictionary:
+                adder = -num
+            return adder
+
+        possible_move_to_list = []
+
+
+        for key in coordinate_list[8-int(movefrom[1])]:
+            if movefrom == key:
+                adder = blackorwhite(1)
+                while adder != 0:
+                    potential_move_counter_filter = int(movefrom[1]) + adder
+                    newmovefrom = movefrom[0] + str(potential_move_counter_filter)
+                    possible_move_to_list.append(newmovefrom)
+                    
+                    if colordict == white_dictionary:
+                        adder -= 1
+                    elif colordict == black_dictionary:
+                        adder += 1
+
+
+                letter = ord(movefrom[0])
+                number = int(movefrom[1])
+
+                direction_list = [1, -1]
+
+                for i in direction_list:
+
+                    newletter = letter + i
+                    newnumber = number + i
+                    newmove = chr(newletter) + str(newnumber)
+
+
+                    for row in coordinate_list:
+                        for key in row.keys():
+                            if newmove == key and newmove not in possible_move_to_list:
+
+                                possible_move_to_list.append(newmove)
+                    
+                    newletter = letter - i
+                    newnumber = number + i
+                    newmove = chr(newletter) + str(newnumber)
+
+                    
+                    for row in coordinate_list:
+                        for key in row.keys():
+                            if newmove == key and newmove not in possible_move_to_list:
+
+                                possible_move_to_list.append(newmove)
+
+                    
+
+
+            #prune invalid spaces that i) are occupied by sides own pieces
+       
+        for key, value in colordict.items():
+            if key in possible_move_to_list:
+                possible_move_to_list.remove(key)
+
+        print(possible_move_to_list)
+
+        return possible_move_to_list
+
+
+    def QueenMovement(movefrom, moveto, coordinate_list):
         print('queen moved')
+
+        def blackorwhite(num):
+            if colordict == white_dictionary:
+                adder = num
+            elif colordict == black_dictionary:
+                adder = -num
+            return adder
+
+
+        possible_move_to_list = []
+      
+
+        #a
+        #print(coordinate_list[8-int(movefrom[1])])
+        for key in coordinate_list[8-int(movefrom[1])]:
+            if movefrom == key:
+            
+                '''get current position and then stairstep spaces from each corner. then prune what is invalid'''
+
+            letter = ord(movefrom[0])
+            number = int(movefrom[1])
+
+            direction_list = [1, -1]
+
+            while direction_list[0] < 9:
+                for i in direction_list:
+
+                    newletter = letter + i
+                    newnumber = number + i
+                    newmove = chr(newletter) + str(newnumber)
+
+
+                    for row in coordinate_list:
+                        for key in row.keys():
+                            if newmove == key and newmove not in possible_move_to_list:
+
+                                possible_move_to_list.append(newmove)
+                    
+                    newletter = letter - i
+                    newnumber = number + i
+                    newmove = chr(newletter) + str(newnumber)
+
+                    
+                    for row in coordinate_list:
+                        for key in row.keys():
+                            if newmove == key and newmove not in possible_move_to_list:
+
+                                possible_move_to_list.append(newmove)
+
+                    
+
+                    direction_list[0] += 1
+                    direction_list[1] += 1
+
+
+
+
+                      #get all possible (read: on board only) vertical moves from current position
+                adder = blackorwhite(7)
+                while adder != 0:
+                    
+                    potential_move_counter_filter = int(movefrom[1]) + adder
+                    #print(potential_move_counter_filter)
+
+                    #maintains board boundaries during calculation
+                    if potential_move_counter_filter > 8 or potential_move_counter_filter < 1:
+                        if colordict == white_dictionary:
+                            adder -= 1
+                        elif colordict == black_dictionary:
+                            adder += 1
+                        continue
+
+                    
+                    newmovefromvert = movefrom[0] + str(potential_move_counter_filter)
+                    possible_move_to_list.append(newmovefromvert)
+                    if colordict == white_dictionary:
+                        adder -= 1
+                    elif colordict == black_dictionary:
+                        adder += 1
+    
+                #get all possible (read: on board only) horizantal moves from current position
+                for i in notation_letter:
+                    asciival = ord(i)
+                    newmovefromhoriz = chr(asciival) + movefrom[1]
+                    possible_move_to_list.append(newmovefromhoriz)
+
+
+                
+
+
+    #prune invalid spaces that i) are occupied by sides own pieces
+       
+        for key, value in colordict.items():
+            if key in possible_move_to_list:
+                possible_move_to_list.remove(key)
+            
+
+
+
+        #b
+        #and ii) would require jumping to get to, as queens don't jump over pieces.\ WIP################
+
+    
+        print(possible_move_to_list)  
+
+        return possible_move_to_list                      
+
+
+                
+
+
 
    #validates the piece that the player wants to move
     print(colordict[movefrom])
@@ -702,9 +934,9 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
     elif colordict[movefrom] == 'B'+ '  'or colordict[movefrom] == 'b' + '  ':
         possible_move_to_list = BishopMovement(movefrom, moveto, coordinate_list)
     elif colordict[movefrom] == 'K'+ '  'or colordict[movefrom] == 'k' + '  ':
-        KingMovement()
+        possible_move_to_list = KingMovement(movefrom, moveto, coordinate_list)
     elif colordict[movefrom] == 'Q'+ '  'or colordict[movefrom] == 'q' + '  ':
-        QueenMovement()
+        possible_move_to_list = QueenMovement(movefrom, moveto, coordinate_list)
     else:
         print('something went wrong')
 
