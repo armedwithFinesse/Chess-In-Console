@@ -12,8 +12,6 @@
 #only 3 pieces of starting information to create the whole game
 
 
-from re import I
-
 
 board = ['.', 'P', 'R', 'N', 'B','Q','K']
 notation_letter= ['A','B','C','D','E','F','G','H']
@@ -650,8 +648,118 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
         
 
 
-    def KnightMovement():
+    def KnightMovement(movefrom, moveto, coordinate_list):
         print('knight moved')
+
+        possible_move_to_list = []
+        four_corners = []
+
+        #get current position
+        for key in coordinate_list[8-int(movefrom[1])]:
+            if movefrom == key:
+            
+                '''get current position and then stairstep spaces from each corner. then prune what is invalid'''
+
+            letter = ord(movefrom[0])
+            number = int(movefrom[1])
+
+            direction_list = [1, -1]
+
+            for i in direction_list:
+
+                newletter = letter + i
+                newnumber = number + i
+                newmove = chr(newletter) + str(newnumber)
+
+
+                for row in coordinate_list:
+                    for key in row.keys():
+                        if newmove == key and newmove not in four_corners:
+
+                            four_corners.append(newmove)
+
+
+                newletter = letter - i
+                newnumber = number + i
+                newmove = chr(newletter) + str(newnumber)
+
+                
+                for row in coordinate_list:
+                    for key in row.keys():
+                        if newmove == key and newmove not in four_corners:
+
+                            four_corners.append(newmove)
+
+        #get positions of the 4 diagonal squares adjecent to current square
+
+            for move in four_corners:
+
+                letter = ord(move[0])
+                number = int(move[1])
+
+                direction_list = [1, -1]
+
+                for i in direction_list:
+                    newnum = number + i
+                    newmove = chr(letter) + str(newnum)
+
+
+                    for row in coordinate_list:
+                            for key in row.keys():
+                                if newmove == key and newmove not in possible_move_to_list:
+
+                                    possible_move_to_list.append(newmove)
+                
+
+                '''for i in direction_list:
+
+                    newletter = letter + i
+                    newnumber = number + i
+                    newmove = chr(newletter) + str(newnumber)
+
+
+                    for row in coordinate_list:
+                        for key in row.keys():
+                            if newmove == key and newmove not in possible_move_to_list:
+
+                                possible_move_to_list.append(newmove)
+
+
+                    newletter = letter - i
+                    newnumber = number + i
+                    newmove = chr(newletter) + str(newnumber)
+
+                    
+                    for row in coordinate_list:
+                        for key in row.keys():
+                            if newmove == key and newmove not in possible_move_to_list:
+
+                                possible_move_to_list.append(newmove)'''
+
+                
+        #get positions of 2 adjecent squares from each of the aforementioned squares
+
+        #prune invalid spaces that i) are occupied by sides own pieces
+       
+        for key, value in colordict.items():
+            if key in possible_move_to_list:
+                possible_move_to_list.remove(key)
+            
+
+
+
+        #b
+        #and ii) would require jumping to get to, as bishops don't jump over pieces.\ WIP################
+
+        print(four_corners)
+        print(possible_move_to_list)  
+
+        return possible_move_to_list                      
+
+
+        
+
+
     def BishopMovement(movefrom, moveto, coordinate_list):
         print('bishop moved')
 
@@ -930,7 +1038,7 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
     elif colordict[movefrom] == 'R'+ '  'or colordict[movefrom] == 'r' + '  ':
         possible_move_to_list = RookMovement(movefrom, moveto, coordinate_list)
     elif colordict[movefrom] == 'N'+ '  'or colordict[movefrom] == 'n' + '  ':
-        KnightMovement()
+        possible_move_to_list = KnightMovement(movefrom, moveto, coordinate_list)
     elif colordict[movefrom] == 'B'+ '  'or colordict[movefrom] == 'b' + '  ':
         possible_move_to_list = BishopMovement(movefrom, moveto, coordinate_list)
     elif colordict[movefrom] == 'K'+ '  'or colordict[movefrom] == 'k' + '  ':
