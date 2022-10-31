@@ -1,13 +1,19 @@
 ''' 
     Final Goals for the chess logic
 
-    1) ensure pieces can't capture other pieces belonging to its own side
-    2) ensure no piece can travel with it's own side in the way
-    3) ensure each piece moves in accordance with its nature as specified by the rules of chess
+    1) ensure pieces can't capture other pieces belonging to its own side{COMPLETE}
+    2) ensure no piece can travel with it's own side in the way{COMPLETE}
+    3) ensure each piece moves in accordance with its nature as specified by the rules of chess{COMPLETE}
         (1,2,3) give each piece-type a set of possible moves from its current position and only allow pieces to move there if said possible move is either an emoty space or an enemy piece
 
     4) ensure checks (and thus unchecks) work
-    5) add colorama for checks'''
+    5) add colorama for checks
+    6) ensure enpessant
+    7) ensure castling
+    8) ensure pawn promotion
+    9) 
+    
+    *******knights need fixing moves aren't registering properly'''
     
 #only 3 pieces of starting information to create the whole game
 
@@ -388,15 +394,17 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
             for key, value in coordinate_list[ranknum].items():
                 if moveto == key and colordict[movefrom] == pawntype:
                     #coordinate_list[0][key] = promotedpiece
+                    print(promotedpiece)
                     coordinate_list[ranknum].update({key : promotedpiece})
                     possible_move_to_list.append(coordinate_list[ranknum][key])
 
+
                     if pawntype == board[1] + '  ':
                         print('white pawn promoted')
+
                     elif pawntype == board[1].lower() + '  ':
                         print('black pawn promoted')
-                
-             
+
             
             
             return None
@@ -413,13 +421,30 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
                 coordinate_list[7][key] = 'q' + '  '
                 print('black pawn promoted')'''
 
+        
+
+        #board = ['.', 'P', 'R', 'N', 'B','Q','K']
+
+
+
+
+
+
+     #seems to only work with queen
+        
+
         promoted = promotion(0, (board[1] + '  '), (board[5] + '  '))
-        promoted = promotion(7, (board[1].lower() + '  '), (board[5].lower() + '  '))
+
+        promoted = promotion(7,(board[1].lower() + '  '), (board[5].lower() + '  '))
 
 
                 
 
-        #f
+        #f prune mechanism
+        for key, value in colordict.items():
+            if key in possible_move_to_list:
+                possible_move_to_list.remove(key)
+        
 
 
         print(possible_move_to_list)
@@ -660,10 +685,44 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
             
                 '''get current position and then stairstep spaces from each corner. then prune what is invalid'''
 
+
+            #get positions of the 4 diagonal squares adjecent to current square
+
+            #knight can move letter - 1 number +- 2, letter - 2 number +- 1, letter + 1, number +- 2, letter + 2 letter +- 1
+
             letter = ord(movefrom[0])
             number = int(movefrom[1])
 
-            direction_list = [1, -1]
+            letter_dict = {-1:2, -2:1, 1:2, 2:-1,}
+            letter_dict_two = {-1:-2, -2:-1, 1:-2, 2:1}
+
+           
+            
+            
+            for key, value in letter_dict.items():
+                newletter = letter + key
+                newnumber = number + value
+                newmove = chr(newletter) + str(newnumber)
+                for row in coordinate_list:
+                    for key in row.keys():
+                        if newmove == key and newmove not in possible_move_to_list:
+                            possible_move_to_list.append(newmove)
+            
+            for key, value in letter_dict_two.items():
+                newletter = letter + key
+                newnumber = number + value
+                newmove = chr(newletter) + str(newnumber)
+                for row in coordinate_list:
+                    for key in row.keys():
+                        if newmove == key and newmove not in possible_move_to_list:
+                            possible_move_to_list.append(newmove)
+
+
+            
+
+                
+
+            '''direction_list = [1, -1]
 
             for i in direction_list:
 
@@ -690,7 +749,7 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
 
                             four_corners.append(newmove)
 
-        #get positions of the 4 diagonal squares adjecent to current square
+        #get positions of 2 adjecent squares from each of the aforementioned squares
 
             for move in four_corners:
 
@@ -708,36 +767,9 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
                             for key in row.keys():
                                 if newmove == key and newmove not in possible_move_to_list:
 
-                                    possible_move_to_list.append(newmove)
+                                    possible_move_to_list.append(newmove)'''
                 
 
-                '''for i in direction_list:
-
-                    newletter = letter + i
-                    newnumber = number + i
-                    newmove = chr(newletter) + str(newnumber)
-
-
-                    for row in coordinate_list:
-                        for key in row.keys():
-                            if newmove == key and newmove not in possible_move_to_list:
-
-                                possible_move_to_list.append(newmove)
-
-
-                    newletter = letter - i
-                    newnumber = number + i
-                    newmove = chr(newletter) + str(newnumber)
-
-                    
-                    for row in coordinate_list:
-                        for key in row.keys():
-                            if newmove == key and newmove not in possible_move_to_list:
-
-                                possible_move_to_list.append(newmove)'''
-
-                
-        #get positions of 2 adjecent squares from each of the aforementioned squares
 
         #prune invalid spaces that i) are occupied by sides own pieces
        
@@ -751,7 +783,7 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
         #b
         #and ii) would require jumping to get to, as bishops don't jump over pieces.\ WIP################
 
-        print(four_corners)
+        #print(four_corners)
         print(possible_move_to_list)  
 
         return possible_move_to_list                      
