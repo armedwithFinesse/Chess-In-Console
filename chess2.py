@@ -10,7 +10,7 @@
     5) add colorama for checks
     6) ensure enpessant
     7) ensure castling
-    8) ensure pawn promotion
+    8) ensure pawn promotion{COMPLETE}
     9) 
     
     '''
@@ -388,7 +388,9 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
             
                 
                                
-        #d
+        #d 
+       
+        
 
         #e
         '''when pawn reaches opposite back rank, it promotes to a piece of the players choosing'''
@@ -414,29 +416,20 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
             return None
 
 
+        '''must make it so that promotion sequence only triggers when a pawn moves to an enemy back rank'''
 
-        '''for key, value in coordinate_list[0].items():
-            if moveto == key and colordict[movefrom] =='P' + '  ':
-                coordinate_list[0][key] = 'Q' + '  '
-                possible_move_to_list.append(coordinate_list[0][key])
-                print('white pawn promoted')
-        for key, value in coordinate_list[7].items():
-            if moveto == key and colordict[movefrom] =='p' + '  ':
-                coordinate_list[7][key] = 'q' + '  '
-                print('black pawn promoted')'''
 
         
+        #promotion input prompt
+        while True:
+            try:
+                promoprompt = input('choose piece: ')
+                assert promoprompt in pieces_can_get_promoted
+                break
+            except:
+                print('Invalid Entry')
+                continue
 
-        #board = ['.', 'P', 'R', 'N', 'B','Q','K']
-
-
-
-
-
-
-     #seems to only work with queen
-        
-        promoprompt = input('choose piece: ')
 
         if colordict == white_dictionary:
             promoted = promotion(0, (board[1] + '  '), (promoprompt.upper() + '  '))
@@ -881,6 +874,53 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
 
                                 possible_move_to_list.append(newmove)
 
+
+        '''If king has not been moved AND either rook has not been moved, install ability to castle short and long by inputing 00 (short), 000(long)'''
+        '''
+        i) get default king and rooks positions
+        ii) if current king and rooks positions is not any of the default positions, disallow 00 and 000
+        iii) else, allow 00 and 000
+        '''
+
+
+        #i
+        '''if colordict == white_dictionary:
+            default_king_position = colordict['E1']
+            default_kings_rook_position = colordict['H1']
+            default_queens_rook_position = colordict['A1']
+
+            current_king_position = colordict[]
+            current_kings_rook_position = colordict[]
+            current_queens_rook_position = colordict[]
+        elif colordict == black_dictionary:
+            default_king_position = colordict['E8']
+            default_kings_rook_position = colordict['H8']
+            default_queens_rook_position = colordict['A8']
+
+            current_king_position = colordict[]
+            current_kings_rook_position = colordict[]
+            current_queens_rook_position = colordict[]
+
+
+
+
+        current_king_position = colordict[]
+        current_kings_rook_position = colordict[]
+        current_queens_rook_position = colordict[]
+
+        #ii & iii
+        if default == current:
+            possible_move_to_list.append('OO')
+            possible_move_to_list.append('OOO')'''
+            
+        
+
+
+
+
+
+
+
                     
 
 
@@ -1047,8 +1087,8 @@ give_board(startpos=True) #'promotion_test', True, False, 'rooktest'
 
 
 
-#print(coordinate_list)
-#print(white_dictionary)
+print(coordinate_list)
+print(white_dictionary)
 #print(black_dictionary)
 
 
