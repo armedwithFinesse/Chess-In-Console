@@ -123,12 +123,13 @@ def playermove(player, colordict):
                     didpass = True
                     print('one')
                     break
-                else:
+                elif i not in possible_move_to_list:
                     tempcopy = coordinate_list[8-int(move_from[1])][key] 
                     coordinate_list[8-int(move_from[1])][key] = board[0]+'  ' #replaces every moved from space with a dot, indicating empty square
                     didpass = True
                     print('two')
-                    continue
+                    break #this break command seems to behave differently when promotion sequence is triggered and not. Might have to rewrite it all
+                    
             print('three')
             break
         
@@ -151,9 +152,11 @@ def playermove(player, colordict):
         colordict[move_to] = colordict[move_from]
         del colordict[move_from]
         didpass = True
+        
     else:
         coordinate_list[8-int(move_from[1])][move_from]  = tempcopy
         didpass = False
+    
 
    
         
@@ -417,28 +420,65 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
 
 
         '''must make it so that promotion sequence only triggers when a pawn moves to an enemy back rank'''
-
-
         
-        #promotion input prompt
-        while True:
+        #if opposite pawn is on second to last rank and moveto is the last rank, then trigger promotion sequence
+       
+     
+        '''while True:
             try:
                 promoprompt = input('choose piece: ')
-                assert promoprompt in pieces_can_get_promoted
+                assert promoprompt+'  ' in pieces_can_get_promoted
                 break
             except:
                 print('Invalid Entry')
                 continue
+        
 
 
         if colordict == white_dictionary:
             promoted = promotion(0, (board[1] + '  '), (promoprompt.upper() + '  '))
         elif colordict == black_dictionary:
-        #promoprompt = input('choose piece: ')
-            promoted = promotion(7,(board[1].lower() + '  '), (promoprompt.lower() + '  '))
+            promoted = promotion(7,(board[1].lower() + '  '), (promoprompt.lower() + '  '))'''
 
 
-                
+        '''if colordict == white_dictionary:
+            second_to_enemy_backrank = coordinate_list[6]
+            enemy_backrank = coordinate_list[7]
+        elif colordict == black_dictionary:
+            second_to_enemy_backrank = coordinate_list[1]
+            enemy_backrank = coordinate_list[0]
+
+
+            
+
+        for key, value in colordict.items():
+            if key in second_to_enemy_backrank:
+                for i in second_to_enemy_backrank:
+                    if colordict[i] == board[1]+'  ' or colordict[i]==board[1].lower()+'  ':
+                        if moveto in enemy_backrank:
+                            #then trigger promotion sequence
+
+                            #promotion sequence
+                            while True:
+                                try:
+                                    promoprompt = input('choose piece: ')
+                                    assert promoprompt+'  ' in pieces_can_get_promoted
+                                    break
+                                except:
+                                    print('Invalid Entry')
+                                    continue
+                            
+
+
+                            if colordict == white_dictionary:
+                                promoted = promotion(0, (board[1] + '  '), (promoprompt.upper() + '  '))
+                            elif colordict == black_dictionary:
+                                promoted = promotion(7,(board[1].lower() + '  '), (promoprompt.lower() + '  '))'''
+
+    
+        
+
+                    
 
         #f prune mechanism
         for key, value in colordict.items():
@@ -1087,7 +1127,7 @@ give_board(startpos=True) #'promotion_test', True, False, 'rooktest'
 
 
 
-print(coordinate_list)
+print(coordinate_list, end = "\n\n")
 print(white_dictionary)
 #print(black_dictionary)
 
