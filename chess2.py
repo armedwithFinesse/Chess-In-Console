@@ -114,24 +114,33 @@ def playermove(player, colordict):
 
     #change dictionary values of move from to empty spaces
     for key, val in coordinate_list[8-int(move_from[1])].items():
+
+        for i in pieces_can_get_promoted:
+            if i in possible_move_to_list:
+                flag_promo = True
+                break
+            else:
+                flag_promo = False
+                continue
        
-        if move_from == key:
-            for i in pieces_can_get_promoted:
-                if i in possible_move_to_list:
-                    tempcopy = i
-                    coordinate_list[8-int(move_from[1])][key] = board[0]+'  ' #checks for pawn promotion
-                    didpass = True
-                    print('one')
-                    break
-                elif i not in possible_move_to_list:
-                    tempcopy = coordinate_list[8-int(move_from[1])][key] 
-                    coordinate_list[8-int(move_from[1])][key] = board[0]+'  ' #replaces every moved from space with a dot, indicating empty square
-                    didpass = True
-                    print('two')
-                    break #this break command seems to behave differently when promotion sequence is triggered and not. Might have to rewrite it all
-                    
-            print('three')
+        if move_from == key and flag_promo == True:
+            #for i in pieces_can_get_promoted:
+                #if i in possible_move_to_list:
+            tempcopy = i
+            coordinate_list[8-int(move_from[1])][key] = board[0]+'  ' #checks for pawn promotion
+            didpass = True
+            print('one')
             break
+            
+        elif move_from == key and flag_promo == False:
+            tempcopy = coordinate_list[8-int(move_from[1])][key] 
+            coordinate_list[8-int(move_from[1])][key] = board[0]+'  ' #replaces every moved from space with a dot, indicating empty square
+            didpass = True
+            print('two')
+            break #this break command seems to behave differently when promotion sequence is triggered and not. Might have to rewrite it all
+                    
+            #print('three')
+            #break
         
         else:
             tempcopy = ''
@@ -441,41 +450,41 @@ def piece_movement(coordinate_list, colordict, movefrom, moveto):# how pieces sh
             promoted = promotion(7,(board[1].lower() + '  '), (promoprompt.lower() + '  '))'''
 
 
-        '''if colordict == white_dictionary:
-            second_to_enemy_backrank = coordinate_list[6]
-            enemy_backrank = coordinate_list[7]
-        elif colordict == black_dictionary:
+        if colordict == white_dictionary:
             second_to_enemy_backrank = coordinate_list[1]
             enemy_backrank = coordinate_list[0]
+        elif colordict == black_dictionary:
+            second_to_enemy_backrank = coordinate_list[6]
+            enemy_backrank = coordinate_list[7]
 
 
             
 
         for key, value in colordict.items():
             if key in second_to_enemy_backrank:
-                for i in second_to_enemy_backrank:
-                    if colordict[i] == board[1]+'  ' or colordict[i]==board[1].lower()+'  ':
-                        if moveto in enemy_backrank:
-                            #then trigger promotion sequence
+                #for i in second_to_enemy_backrank:
+                if value == board[1]+'  ' or value ==board[1].lower()+'  ':
+                    if moveto in enemy_backrank:
+                        #then trigger promotion sequence
 
-                            #promotion sequence
-                            while True:
-                                try:
-                                    promoprompt = input('choose piece: ')
-                                    assert promoprompt+'  ' in pieces_can_get_promoted
-                                    break
-                                except:
-                                    print('Invalid Entry')
-                                    continue
-                            
+                        #promotion sequence
+                        while True:
+                            try:
+                                promoprompt = input('choose piece: ')
+                                assert promoprompt+'  ' in pieces_can_get_promoted
+                                break
+                            except:
+                                print('Invalid Entry')
+                                continue
+                        
 
 
-                            if colordict == white_dictionary:
-                                promoted = promotion(0, (board[1] + '  '), (promoprompt.upper() + '  '))
-                            elif colordict == black_dictionary:
-                                promoted = promotion(7,(board[1].lower() + '  '), (promoprompt.lower() + '  '))'''
+                        if colordict == white_dictionary:
+                            promoted = promotion(0, (board[1] + '  '), (promoprompt.upper() + '  '))
+                        elif colordict == black_dictionary:
+                            promoted = promotion(7,(board[1].lower() + '  '), (promoprompt.lower() + '  '))
 
-    
+
         
 
                     
@@ -1123,7 +1132,7 @@ def errorHandling():
 
 
 
-give_board(startpos=True) #'promotion_test', True, False, 'rooktest'
+give_board(startpos='promotion_test') #'promotion_test', True, False, 'rooktest'
 
 
 
